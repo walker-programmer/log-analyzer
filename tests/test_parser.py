@@ -1,23 +1,24 @@
 from datetime import datetime
+
 import pytest
+
 from log_analyzer.parser import parse_line
+
 
 def test_parse_line():
     line = '192.168.1.10 - - [30/Aug/2026:10:15:32 +0300] "GET /index.html HTTP/1.1" 200 1543'
     str_data_format = "%d/%b/%Y:%H:%M:%S %z"
-    
+
     entry = parse_line(line)
-    
+
     assert entry.ip == "192.168.1.10"
     assert entry.timestamp == datetime.strptime(
-        "30/Aug/2026:10:15:32 +0300", 
-        str_data_format
+        "30/Aug/2026:10:15:32 +0300", str_data_format
     )
     assert entry.method == "GET"
     assert entry.url == "/index.html"
     assert entry.status_code == 200
     assert entry.response_size == 1543
-    
 
 
 def test_parse_line_raises_value_error_on_error_line():
@@ -30,7 +31,6 @@ def test_parse_line_raises_value_error_on_error_line():
 
     # (Опционально) Проверяем текст ошибки, чтобы убедиться, что упало именно там
     assert str(exc_info.value) == "Error log line"
-
 
 
 def test_parse_line_raises_value_error_on_empty_string():
