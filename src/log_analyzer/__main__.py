@@ -14,7 +14,12 @@ def analyze_file(filename: str) -> Analyzer:
             if not line:
                 continue
 
-            log_entry = parse_line(line)
+            try:
+                log_entry = parse_line(line)
+            except ValueError:
+                print("Warning: invalid log line, skipped")
+                continue
+
             analyzer.process(log_entry)
 
     return analyzer

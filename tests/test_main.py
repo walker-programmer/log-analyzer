@@ -25,3 +25,19 @@ def test_analyze_file(tmp_path):
 def test_analyze_file_file_not_found():
     with pytest.raises(FileNotFoundError):
         analyze_file("nonexistent.log")
+
+
+def test_analyze_file_skips_invalid_line(tmp_path):
+    log_file = tmp_path / "test.log"
+
+    log_file.write_text(
+        "invalid log line\n"
+        "192.168.1.10 - - [30/Aug/2026:10:15:32 +0300] "
+        '"GET /index.html HTTP/1.1" 200 1543\n',
+        encoding="utf-8",
+    )
+
+    analyzer = analyze_file(str(log_file))
+
+    assert analyzer.total_requests == 1
+    assert analyzer.total_response_size == 1543
