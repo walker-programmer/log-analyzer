@@ -1,3 +1,5 @@
+import pytest
+
 from log_analyzer.__main__ import analyze_file
 
 
@@ -18,3 +20,8 @@ def test_analyze_file(tmp_path):
     assert analyzer.total_response_size == 2055
     assert analyzer.methods == {"GET": 1, "POST": 1}
     assert analyzer.status_codes == {200: 1, 302: 1}
+
+
+def test_analyze_file_file_not_found():
+    with pytest.raises(FileNotFoundError):
+        analyze_file("nonexistent.log")

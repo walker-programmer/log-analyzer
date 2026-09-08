@@ -26,7 +26,11 @@ def main():
 
     args = parser.parse_args()
 
-    analyzer = analyze_file(args.logfile)
+    try:
+        analyzer = analyze_file(args.logfile)
+    except FileNotFoundError:
+        print(f"Error: file not found: {args.logfile}")
+        return
 
     print(f"Total requests: {analyzer.total_requests}")
     print(f"Total response size: {analyzer.total_response_size}")
